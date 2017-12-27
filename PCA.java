@@ -97,7 +97,7 @@ public class PCA extends PApplet {
 		background(0);
 		world = new Axes(this);
 		g = new Grid(this);
-		d = new Dragger(this);
+		d = new Dragger();
 
 		camera = new Matrix(4, 3); // camera's basis vectors
 		camera.M[3] = 1;
@@ -170,8 +170,8 @@ public class PCA extends PApplet {
 		fill(255);
 		text("count = " + count, 50, 50);
 		noFill();
-
-		if (d.check()) { // check if dragging the camera with mouse
+		
+		if (d.check(pmouseX, pmouseY, mouseX, mouseY)) { // check if dragging the camera with mouse
 			Matrix camera2 = camera.matrixProduct(camRot, camera.getCopy());
 			Matrix rotUpdate = d.reorientCamera(camera2);
 			camRot.mult(rotUpdate); // update camera's orientation
