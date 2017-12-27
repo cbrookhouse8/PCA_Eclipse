@@ -1,9 +1,9 @@
 package small.data.structures;
 
-//this class isn't yet used in the most
-//efficient way. Over-reliance on .getR()
+// this class isn't yet used in the most
+// efficient way. Over-reliance on .getR()
 
-//See Equations 4.32 to 4.69 in Lengyel (pp. 80-89)
+// See Equations 4.32 to 4.69 in Lengyel (pp. 80-89)
 
 public class Quaternion {
 

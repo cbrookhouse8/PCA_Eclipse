@@ -1,7 +1,5 @@
 package small.data.structures;
 
-import processing.core.PApplet;
-
 public class Matrix {
 	// column major
 

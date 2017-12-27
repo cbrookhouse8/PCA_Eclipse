@@ -125,7 +125,7 @@ public class Ellipsoid {
 
 			if (radiusSqd_2 > radiusSqd_1) { // compare
 				// then find G
-				float sc = p.pow(radiusSqd_1, 0.5f) / p.pow(radiusSqd_2, 0.5f);
+				float sc = (float) (Math.sqrt(radiusSqd_1) / Math.sqrt(radiusSqd_2));
 				radVec_2.scale(sc);
 
 				G = G.matrixSub(Q, radVec_2);
@@ -148,7 +148,7 @@ public class Ellipsoid {
 		Q.mult(sinv);
 
 		// define semi-axis lengths
-		float finalRadius = p.pow(radiusSqd_1, 0.5f);
+		float finalRadius = (float) Math.sqrt(radiusSqd_1);
 		semiAxes = new Matrix(
 				new float[] { finalRadius * ranges.M[0], finalRadius * ranges.M[4], finalRadius * ranges.M[8] }, 3, 1);
 	}
@@ -171,11 +171,11 @@ public class Ellipsoid {
 
 		float theta = 0;
 		float phi = 0;
-		float full = 2 * p.PI;
+		float full = 2 * (float) Math.PI;
 		int steps = 20;
 		float angInc = full / (steps);
 		float sc1, sc2, sc3;
-		float radius = p.pow(radVec_1.dot(radVec_1), 0.5f);
+		float radius = (float) Math.sqrt(radVec_1.dot(radVec_1));
 
 		Matrix pc1_h = new Matrix(new float[] { pcs.M[0], pcs.M[1], pcs.M[2], 1 }, 4, 1);
 		Matrix pc2_h = new Matrix(new float[] { pcs.M[3], pcs.M[4], pcs.M[5], 1 }, 4, 1);
@@ -193,9 +193,9 @@ public class Ellipsoid {
 			p.beginShape();
 			for (int j = 0; j < steps; j++) {
 				phi += angInc;
-				sc1 = radius * ranges.M[0] * p.cos(theta) * p.sin(phi);
-				sc2 = radius * ranges.M[4] * p.sin(theta) * p.sin(phi);
-				sc3 = radius * ranges.M[8] * p.cos(phi);
+				sc1 = radius * ranges.M[0] * (float) (Math.cos(theta) * Math.sin(phi));
+				sc2 = radius * ranges.M[4] * (float) (Math.sin(theta) * Math.sin(phi));
+				sc3 = radius * ranges.M[8] * (float) Math.cos(phi);
 
 				surfacePoint = pc1_h.getCopy();
 				Matrix pc2_Copy = pc2_h.getCopy();
@@ -221,9 +221,9 @@ public class Ellipsoid {
 			p.beginShape();
 			for (int j = 0; j < steps; j++) {
 				theta += angInc;
-				sc1 = radius * ranges.M[0] * p.cos(theta) * p.sin(phi);
-				sc2 = radius * ranges.M[4] * p.sin(theta) * p.sin(phi);
-				sc3 = radius * ranges.M[8] * p.cos(phi);
+				sc1 = radius * ranges.M[0] * (float) (Math.cos(theta) * Math.sin(phi));
+				sc2 = radius * ranges.M[4] * (float) (Math.sin(theta) * Math.sin(phi));
+				sc3 = radius * ranges.M[8] * (float) Math.cos(phi);
 
 				surfacePoint = pc1_h.getCopy();
 				Matrix pc2_Copy = pc2_h.getCopy();

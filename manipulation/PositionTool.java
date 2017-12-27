@@ -1,6 +1,5 @@
 package manipulation;
 
-import processing.core.PApplet;
 import small.data.structures.Matrix;
 import small.data.structures.Quaternion;
 
