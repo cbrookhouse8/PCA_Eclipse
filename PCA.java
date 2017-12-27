@@ -16,8 +16,8 @@ public class PCA extends PApplet {
 
 	Logger log;
 
-	Grid g; // Nb. transformed to world space within the class
-	Dragger d; // Object that handles changes in camera orientation due to mouse drag
+	Grid g; 		// Nb. transformed to world space within the class
+	Dragger d; 	// Object that handles changes in camera orientation due to mouse drag
 	Axes world;
 
 	Matrix camera, camRot, camTrans, cameraToWorld;
@@ -29,16 +29,16 @@ public class PCA extends PApplet {
 
 	Matrix localAxes;
 
-	Matrix data; // aim for a square number of points
-	Matrix PCS; // just the principal components
-	Matrix all; // PCA's and eigenvalues in col 4
+	Matrix data; 	// aim for a square number of points
+	Matrix PCS; 		// just the principal components
+	Matrix all; 		// PCA's and eigenvalues in col 4
 
 	boolean axesFound;
 	Quaternion q1, q2;
 
-	int count; // Used in Animation Operations 1 to 4
-	int count2; // Used in Animation Operation 5
-	boolean movingBasis; // read as 'moving the existing data basis onto the
+	int count; 		// Used in Animation Operations 1 to 4
+	int count2; 		// Used in Animation Operation 5
+	boolean movingBasis; 	// read as 'moving the existing data basis onto the
 							// basis given by PCA'
 
 	Ellipsoid container;
@@ -54,31 +54,39 @@ public class PCA extends PApplet {
 	PositionTool alignCamera;
 	boolean aligning;
 	boolean aligned;
-	int alignedTo; // identifies the principal component to which
-					// the camera's look-at vector is aligned
+	
+	// identifies the principal component to which
+	// the camera's look-at vector is aligned
+	int alignedTo; 
 
 	Matrix fromRotArm;
-	Quaternion alArm; // represents an animated rotation of the camera arm
-						// read as 'aligns the camera arm'
+	
+	// represents an animated rotation of the camera arm
+	// read as 'aligns the camera arm'
+	Quaternion alArm; 
 
 	boolean downProjecting, downProjected;
 	boolean recovering;
-	boolean varAnimating; // read as 'variance being animated'
+	
+	// read as 'variance being animated'
+	boolean varAnimating;
+	
 	float[] eigenVals;
 
 	PVector butp1, butp2, butp3; // 0,1,2
-	PVector projBut; // 3
-	PVector orbBut; // 4
-	PVector ellipBut; // 5
-	PVector newData; // 6
-	PVector gridBut; // 7
+	PVector projBut; 	// 3
+	PVector orbBut; 		// 4
+	PVector ellipBut; 	// 5
+	PVector newData; 	// 6
+	PVector gridBut; 	// 7
 
 	int mouseCount;
 
-	Matrix vari2D; // stores the x,y coordinates of the axis
-					// capturing greatest variance after data
-					// has been projected down to 2D. Needs to
-					// be global because the line is animated.
+	// stores the x,y coordinates of the axis
+	// capturing greatest variance after data
+	// has been projected down to 2D. Needs to
+	// be global because the line is animated.
+	Matrix vari2D; 
 
 	// Run this project as Java application and this
 	// method will launch the sketch
@@ -88,13 +96,13 @@ public class PCA extends PApplet {
 
 	public void settings() {
 		size(600, 600);
-
 	}
 
 	public void setup() {
 
 		log = new Logger(this);
 		background(0);
+		
 		world = new Axes(this);
 		g = new Grid(this);
 		d = new Dragger();
@@ -165,13 +173,16 @@ public class PCA extends PApplet {
 	}
 
 	public void draw() {
-		background(0); // redraw the background
+		// redraw the background
+		background(0);
+		
 		textAlign(LEFT, CENTER);
 		fill(255);
 		text("count = " + count, 50, 50);
 		noFill();
 		
-		if (d.check(pmouseX, pmouseY, mouseX, mouseY)) { // check if dragging the camera with mouse
+		// check if dragging the camera with mouse
+		if (d.check(pmouseX, pmouseY, mouseX, mouseY)) { 
 			Matrix camera2 = camera.matrixProduct(camRot, camera.getCopy());
 			Matrix rotUpdate = d.reorientCamera(camera2);
 			camRot.mult(rotUpdate); // update camera's orientation
@@ -404,12 +415,16 @@ public class PCA extends PApplet {
 	}
 
 	Matrix findPlanarComponents() {
-		Matrix planePCS = new Matrix(4, 2); // the two principal components to which the camera's
+		// the two principal components to which the camera's
 		// look-at is not aligned
+		Matrix planePCS = new Matrix(4, 2);
+		
 		int targCol = 0;
-		eigenVals = new float[2]; // worth storing the respective eigenvalues of the
-									// two principal components in case we want to output
-									// info about data's variance along those axes
+		
+		// worth storing the respective eigenvalues of the
+		// two principal components in case we want to output
+		// info about data's variance along those axes
+		eigenVals = new float[2]; 
 
 		for (int j = 0; j < 3; j++) {
 			// we want the two principal components that are orthogonal to
@@ -481,13 +496,18 @@ public class PCA extends PApplet {
 
 		return rval;
 	}
-
-	void extentAnimation(float t) { // 0 <= t <= 1
+	
+	/**
+	 * @param t in the interval [0, 1]
+	 */
+	void extentAnimation(float t) {
 		stroke(255, 200);
 		strokeWeight(2);
 
-		line(width / 2 + ((t * vari2D.M[2])), height / 2 + ((t * vari2D.M[3])), width / 2 + ((t * vari2D.M[0])),
-				height / 2 + ((t * vari2D.M[1])));
+		line(width / 2 + ((t * vari2D.M[2])), 
+			height / 2 + ((t * vari2D.M[3])), 
+			width / 2 + ((t * vari2D.M[0])),
+			height / 2 + ((t * vari2D.M[1])));
 
 		if (t == 1) {
 			fill(255);
@@ -565,17 +585,18 @@ public class PCA extends PApplet {
 		}
 
 		pushMatrix();
-		translate(mouseX, mouseY);
-		rotate(PI / 3);
-		beginShape();
-		vertex(0, 0);
-		vertex(12, 5);
-		vertex(10, 1);
-		vertex(17, 1);
-		vertex(17, -1);
-		vertex(10, -1);
-		vertex(12, -5);
-		endShape(CLOSE);
+			translate(mouseX, mouseY);
+			rotate(PI / 3);
+			
+			beginShape();
+				vertex(0, 0);
+				vertex(12, 5);
+				vertex(10, 1);
+				vertex(17, 1);
+				vertex(17, -1);
+				vertex(10, -1);
+				vertex(12, -5);
+			endShape(CLOSE);
 		popMatrix();
 	}
 
@@ -629,7 +650,7 @@ public class PCA extends PApplet {
 		Quaternion arbRot = new Quaternion(random(0, 1) * PI, -random(0, 1), random(0, 1), random(0, 1));
 		data.mult(arbRot.getR(3));
 
-		// a translation would complicate camera aligment procedure
+		// a translation would complicate camera alignment procedure
 	}
 
 	void realignCameraAndBasis(int i) {
@@ -650,8 +671,12 @@ public class PCA extends PApplet {
 
 		// align col 1 of basis with pc1
 		Matrix holder = PCS.isolate(1, 1, 3, 1);
-		Matrix localAxis = holder.cross(axisBasis.isolate(1, 1, 3, 1)); // axis of rotation (implies rotation direction)
-		float localTheta = -acos(holder.dot(world.vcs.isolate(1, 1, 3, 1))); // magnitude of rotation (radians)
+		
+		// axis of rotation (implies rotation direction)
+		Matrix localAxis = holder.cross(axisBasis.isolate(1, 1, 3, 1)); 
+		
+		 // magnitude of rotation (radians)
+		float localTheta = -acos(holder.dot(world.vcs.isolate(1, 1, 3, 1)));
 		Quaternion qA = new Quaternion(localTheta, localAxis.M);
 
 		axisBasis.mult(qA.getR(3));
@@ -698,7 +723,8 @@ public class PCA extends PApplet {
 		if (val == -1) {
 			d.pressed();
 		} else {
-			if (val < 3 && !downProjected) { // 0,1,2. Align to one of the principal components
+			if (val < 3 && !downProjected) {
+				// 0,1,2. Align to one of the principal components
 				if (!aligning && alignedTo != val) {
 					aligning = true;
 					aligned = false;
@@ -707,15 +733,19 @@ public class PCA extends PApplet {
 
 					if (!axesFound) {
 						showEllipsoid = false;
-						PCA_routine(alignedTo + 1); // find the new set of principal components
+						// find the new set of principal components
+						PCA_routine(alignedTo + 1);
 						axesFound = true;
 						movingBasis = true;
 					}
 
-					realignCameraAndBasis(alignedTo + 1); // find the consequent rotations for
-															// the camera arm and data basis
+					// find the consequent rotations for
+					// the camera arm and data basis
+					realignCameraAndBasis(alignedTo + 1); 
 				}
-			} else if (val == 3 && aligned) { // 3. Project the data onto the plane orthogonal to
+			} else if (val == 3 && aligned) {
+				// 3. Project the data onto the plane orthogonal to
+				
 				showEllipsoid = false; // the aligned camera's look-at vector
 
 				if (downProjected) {
@@ -727,17 +757,21 @@ public class PCA extends PApplet {
 					count = 60;
 					vari2D = findPlanarComponents();
 				}
-			} else if (val == 4) { // 4. orbit the data
+			} else if (val == 4) {
+				// 4. orbit the data
 				orbiting = true;
-			} else if (val == 5) { // 5. toggle on/off the ellipsoidal bounding volume
+			} else if (val == 5) {
+				// 5. toggle on/off the ellipsoidal bounding volume
 				showEllipsoid = !showEllipsoid;
-			} else if (val == 6) { // 6. create a new data set
+			} else if (val == 6) {
+				// 6. create a new data set
 				showEllipsoid = false;
 				createPoints();
 				axesFound = false;
 				aligned = false;
 				alignedTo = -1;
-			} else if (val == 7) { // 7. toggle on/off the grid
+			} else if (val == 7) {
+				// 7. toggle on/off the grid
 				showGrid = !showGrid;
 			}
 		}

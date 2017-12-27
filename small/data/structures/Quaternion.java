@@ -44,7 +44,7 @@ public class Quaternion {
 		v = new float[] { _v[0], _v[1], _v[2] };
 	}
 
-	// There is an opportunity for significat improvement of these constructors.
+	// There is an opportunity for significant improvement of these constructors.
 	// See:
 	// http://lolengine.net/blog/2013/09/18/beautiful-maths-quaternion-from-vectors
 
